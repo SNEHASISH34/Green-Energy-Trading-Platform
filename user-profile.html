@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile - Green Energy Trading</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <h1><i class="fas fa-user-circle"></i> User Profile</h1>
+            <button id="themeToggle" class="theme-toggle">
+                <i class="fas fa-sun"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container nav-container">
+            <div class="nav-buttons">
+                <a href="index.html" class="btn btn-outline"><i class="fas fa-home"></i> Home</a>
+                <a href="cart.html" class="btn btn-outline"><i class="fas fa-shopping-cart"></i> Cart</a>
+                <a href="notification.html" class="btn btn-outline"><i class="fas fa-bell"></i> Notifications</a>
+                <a href="track-order.html" class="btn btn-outline"><i class="fas fa-truck"></i> Track Orders</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main>
+        <div class="container profile-section">
+            <div id="profile-container">
+                <div class="profile-header animate-fade-in">
+                    <div class="profile-avatar" id="profileInitials">
+                        <!-- User initials will be displayed here -->
+                    </div>
+                    <div class="profile-info">
+                        <h2 id="profileName">John Doe</h2>
+                        <p class="profile-email" id="profileEmail">john.doe@example.com</p>
+                    </div>
+                </div>
+                
+                <div class="profile-menu animate-fade-in">
+                    <div class="profile-menu-item" onclick="showAddressModal()">
+                        <div class="menu-icon">
+                            <i class="fas fa-map-marker-alt"></i>
+                        </div>
+                        <div class="profile-menu-title">Saved Addresses</div>
+                        <i class="fas fa-chevron-right"></i>
+                    </div>
+                    
+                    <div class="profile-menu-item" onclick="showPaymentModal()">
+                        <div class="menu-icon">
+                            <i class="fas fa-credit-card"></i>
+                        </div>
+                        <div class="profile-menu-title">Payment Methods</div>
+                        <i class="fas fa-chevron-right"></i>
+                    </div>
+                    
+                    <div class="profile-menu-item" onclick="navigateTo('notification.html')">
+                        <div class="menu-icon">
+                            <i class="fas fa-bell"></i>
+                        </div>
+                        <div class="profile-menu-title">Notifications</div>
+                        <i class="fas fa-chevron-right"></i>
+                    </div>
+                    
+                    <div class="profile-menu-item" onclick="logout()">
+                        <div class="menu-icon">
+                            <i class="fas fa-sign-out-alt"></i>
+                        </div>
+                        <div class="profile-menu-title">Logout</div>
+                        <i class="fas fa-chevron-right"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Address Modal -->
+        <div id="addressModal" class="modal">
+            <div class="modal-content">
+                <h2>Manage Addresses</h2>
+                <div id="addressList" class="address-list">
+                    <!-- Addresses will be listed here -->
+                </div>
+                <button class="btn btn-primary" onclick="showAddAddressForm()">Add New Address</button>
+                <div id="addAddressForm" class="form-container" style="display: none;">
+                    <div class="form-group">
+                        <input type="text" id="addressLine1" class="form-control" placeholder="Address Line 1">
+                    </div>
+                    <div class="form-group">
+                        <input type="text" id="addressLine2" class="form-control" placeholder="Address Line 2">
+                    </div>
+                    <div class="form-group">
+                        <input type="text" id="city" class="form-control" placeholder="City">
+                    </div>
+                    <div class="form-group">
+                        <input type="text" id="state" class="form-control" placeholder="State">
+                    </div>
+                    <div class="form-group">
+                        <input type="text" id="pincode" class="form-control" placeholder="Pincode">
+                    </div>
+                    <div class="modal-actions">
+                        <button class="btn btn-outline" onclick="hideAddAddressForm()">Cancel</button>
+                        <button class="btn btn-primary" onclick="saveAddress()">Save Address</button>
+                    </div>
+                </div>
+                <button class="btn btn-outline" onclick="closeAddressModal()">Close</button>
+            </div>
+        </div>
+
+        <!-- Payment Method Modal -->
+        <div id="paymentModal" class="modal">
+            <div class="modal-content">
+                <h2>Manage Payment Methods</h2>
+                <div id="paymentList" class="payment-list">
+                    <!-- Payment methods will be listed here -->
+                </div>
+                <button class="btn btn-primary" onclick="showAddPaymentForm()">Add New Card</button>
+                <div id="addPaymentForm" class="form-container" style="display: none;">
+                    <div class="form-group">
+                        <input type="text" id="cardName" class="form-control" placeholder="Cardholder Name">
+                    </div>
+                    <div class="form-group">
+                        <input type="text" id="cardNumber" class="form-control" placeholder="Card Number" maxlength="19" onkeyup="formatCardNumber()">
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <input type="text" id="expiryDate" class="form-control" placeholder="MM/YY" maxlength="5" onkeyup="formatExpiryDate()">
+                        </div>
+                        <div class="form-group">
+                            <input type="password" id="cvv" class="form-control" placeholder="CVV" maxlength="3">
+                        </div>
+                    </div>
+                    <div class="modal-actions">
+                        <button class="btn btn-outline" onclick="hideAddPaymentForm()">Cancel</button>
+                        <button class="btn btn-primary" onclick="savePaymentMethod()">Save Card</button>
+                    </div>
+                </div>
+                <button class="btn btn-outline" onclick="closePaymentModal()">Close</button>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-column">
+                <h3>Company</h3>
+                <ul class="footer-links">
+                    <li><a href="#">About Us</a></li>
+                    <li><a href="#">Our Team</a></li>
+                    <li><a href="#">Careers</a></li>
+                    <li><a href="#">Contact Us</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h3>Services</h3>
+                <ul class="footer-links">
+                    <li><a href="solar.html">Solar Electricity</a></li>
+                    <li><a href="wind.html">Wind Electricity</a></li>
+                    <li><a href="#">Become a Seller</a></li>
+                    <li><a href="#">Business Solutions</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h3>Help & Support</h3>
+                <ul class="footer-links">
+                    <li><a href="#">FAQ</a></li>
+                    <li><a href="#">Shipping Policy</a></li>
+                    <li><a href="#">Returns & Refunds</a></li>
+                    <li><a href="#">Payment Options</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h3>Connect With Us</h3>
+                <ul class="footer-links">
+                    <li><a href="#"><i class="fab fa-facebook"></i> Facebook</a></li>
+                    <li><a href="#"><i class="fab fa-twitter"></i> Twitter</a></li>
+                    <li><a href="#"><i class="fab fa-instagram"></i> Instagram</a></li>
+                    <li><a href="#"><i class="fab fa-linkedin"></i> LinkedIn</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="copyright">
+            <p>&copy; 2025 Green Energy Trading. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        let currentUser = JSON.parse(localStorage.getItem('currentUser')) || null;
+        
+        // Theme toggle functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const themeToggle = document.getElementById('themeToggle');
+            const html = document.documentElement;
+            const icon = themeToggle.querySelector('i');
+
+            // Load saved theme
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            html.setAttribute('data-theme', savedTheme);
+            updateThemeIcon(savedTheme);
+
+            themeToggle.addEventListener('click', () => {
+                const currentTheme = html.getAttribute('data-theme');
+                const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+                
+                html.setAttribute('data-theme', newTheme);
+                localStorage.setItem('theme', newTheme);
+                updateThemeIcon(newTheme);
+            });
+
+            function updateThemeIcon(theme) {
+                icon.className = theme === 'light' ? 'fas fa-moon' : 'fas fa-sun';
+            }
+        });
+
+        // Initialize profile
+        function initializeProfile() {
+            if (!currentUser) {
+                window.location.href = 'sign-in.html';
+                return;
+            }
+
+            document.getElementById('profileName').textContent = currentUser.name;
+            document.getElementById('profileEmail').textContent = currentUser.email;
+            document.getElementById('profileInitials').textContent = getInitials(currentUser.name);
+        }
+
+        // Address Management
+        function showAddressModal() {
+            document.getElementById('addressModal').style.display = 'flex';
+            displayAddresses();
+        }
+
+        function closeAddressModal() {
+            document.getElementById('addressModal').style.display = 'none';
+            hideAddAddressForm();
+        }
+
+        function showAddAddressForm() {
+            document.getElementById('addAddressForm').style.display = 'block';
+        }
+
+        function hideAddAddressForm() {
+            document.getElementById('addAddressForm').style.display = 'none';
+            // Clear form
+            document.getElementById('addressLine1').value = '';
+            document.getElementById('addressLine2').value = '';
+            document.getElementById('city').value = '';
+            document.getElementById('state').value = '';
+            document.getElementById('pincode').value = '';
+        }
+
+        function saveAddress() {
+            const addressLine1 = document.getElementById('addressLine1').value.trim();
+            const addressLine2 = document.getElementById('addressLine2').value.trim();
+            const city = document.getElementById('city').value.trim();
+            const state = document.getElementById('state').value.trim();
+            const pincode = document.getElementById('pincode').value.trim();
+
+            if (!addressLine1 || !city || !state || !pincode) {
+                alert('Please fill in all required fields.');
+                return;
+            }
+
+            const newAddress = {
+                id: Date.now(),
+                addressLine1,
+                addressLine2,
+                city,
+                state,
+                pincode
+            };
+
+            currentUser.addresses = currentUser.addresses || [];
+            currentUser.addresses.push(newAddress);
+            localStorage.setItem('currentUser', JSON.stringify(currentUser));
+
+            hideAddAddressForm();
+            displayAddresses();
+        }
+
+        function displayAddresses() {
+            const addressList = document.getElementById('addressList');
+            const addresses = currentUser.addresses || [];
+
+            if (addresses.length === 0) {
+                addressList.innerHTML = '<p>No saved addresses yet.</p>';
+                return;
+            }
+
+            addressList.innerHTML = addresses.map(address => `
+                <div class="address-item">
+                    <div class="address-details">
+                        <p>${address.addressLine1}</p>
+                        ${address.addressLine2 ? `<p>${address.addressLine2}</p>` : ''}
+                        <p>${address.city}, ${address.state} - ${address.pincode}</p>
+                    </div>
+                    <button class="btn btn-outline" onclick="deleteAddress(${address.id})">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        function deleteAddress(addressId) {
+            if (confirm('Are you sure you want to delete this address?')) {
+                currentUser.addresses = currentUser.addresses.filter(addr => addr.id !== addressId);
+                localStorage.setItem('currentUser', JSON.stringify(currentUser));
+                displayAddresses();
+            }
+        }
+
+        // Payment Method Management
+        function showPaymentModal() {
+            document.getElementById('paymentModal').style.display = 'flex';
+            displayPaymentMethods();
+        }
+
+        function closePaymentModal() {
+            document.getElementById('paymentModal').style.display = 'none';
+            hideAddPaymentForm();
+        }
+
+        function showAddPaymentForm() {
+            document.getElementById('addPaymentForm').style.display = 'block';
+        }
+
+        function hideAddPaymentForm() {
+            document.getElementById('addPaymentForm').style.display = 'none';
+            // Clear form
+            document.getElementById('cardName').value = '';
+            document.getElementById('cardNumber').value = '';
+            document.getElementById('expiryDate').value = '';
+            document.getElementById('cvv').value = '';
+        }
+
+        function formatCardNumber() {
+            const input = document.getElementById('cardNumber');
+            let value = input.value.replace(/\s+/g, '').replace(/[^0-9]/gi, '');
+            const matches = value.match(/\d{4,16}/g);
+            const match = matches && matches[0] || '';
+            const parts = [];
+
+            for (let i = 0; i < match.length; i += 4) {
+                parts.push(match.substring(i, i + 4));
+            }
+
+            if (parts.length) {
+                input.value = parts.join(' ');
+            } else {
+                input.value = value;
+            }
+        }
+
+        function formatExpiryDate() {
+            const input = document.getElementById('expiryDate');
+            let value = input.value.replace(/\s+/g, '').replace(/[^0-9]/gi, '');
+            
+            if (value.length >= 2) {
+                const month = parseInt(value.substring(0, 2));
+                
+                if (month > 12) {
+                    input.value = '12' + (value.length > 2 ? '/' + value.substring(2) : '');
+                } else {
+                    input.value = value.substring(0, 2) + (value.length > 2 ? '/' + value.substring(2) : '');
+                }
+            } else {
+                input.value = value;
+            }
+        }
+
+        function savePaymentMethod() {
+            const cardName = document.getElementById('cardName').value.trim();
+            const cardNumber = document.getElementById('cardNumber').value.trim();
+            const expiryDate = document.getElementById('expiryDate').value.trim();
+            const cvv = document.getElementById('cvv').value.trim();
+
+            if (!cardName || !cardNumber || !expiryDate || !cvv) {
+                alert('Please fill in all card details.');
+                return;
+            }
+
+            const newPaymentMethod = {
+                id: Date.now(),
+                cardName,
+                cardNumber: '*'.repeat(12) + cardNumber.slice(-4),
+                expiryDate
+            };
+
+            currentUser.paymentMethods = currentUser.paymentMethods || [];
+            currentUser.paymentMethods.push(newPaymentMethod);
+            localStorage.setItem('currentUser', JSON.stringify(currentUser));
+
+            hideAddPaymentForm();
+            displayPaymentMethods();
+        }
+
+        function displayPaymentMethods() {
+            const paymentList = document.getElementById('paymentList');
+            const paymentMethods = currentUser.paymentMethods || [];
+
+            if (paymentMethods.length === 0) {
+                paymentList.innerHTML = '<p>No saved payment methods yet.</p>';
+                return;
+            }
+
+            paymentList.innerHTML = paymentMethods.map(payment => `
+                <div class="payment-item">
+                    <div class="payment-details">
+                        <p><i class="fas fa-credit-card"></i> ${payment.cardNumber}</p>
+                        <p>Expires: ${payment.expiryDate}</p>
+                        <p>${payment.cardName}</p>
+                    </div>
+                    <button class="btn btn-outline" onclick="deletePaymentMethod(${payment.id})">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        function deletePaymentMethod(paymentId) {
+            if (confirm('Are you sure you want to delete this payment method?')) {
+                currentUser.paymentMethods = currentUser.paymentMethods.filter(payment => payment.id !== paymentId);
+                localStorage.setItem('currentUser', JSON.stringify(currentUser));
+                displayPaymentMethods();
+            }
+        }
+
+        // Utility Functions
+        function getInitials(name) {
+            return name
+                .split(' ')
+                .map(part => part.charAt(0))
+                .join('')
+                .toUpperCase();
+        }
+
+        function navigateTo(url) {
+            window.location.href = url;
+        }
+
+        function logout() {
+            if (confirm('Are you sure you want to logout?')) {
+                localStorage.removeItem('currentUser');
+                window.location.href = 'sign-in.html';
+            }
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', initializeProfile);
+    </script>
+</body>
+</html>

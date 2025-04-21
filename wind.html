@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wind Electricity - Green Energy Trading</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <h1><i class="fas fa-wind"></i> Wind Electricity</h1>
+        </div>
+    </header>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container nav-container">
+            <div class="search-box">
+                <input type="text" placeholder="Search for wind energy sellers..." id="searchInput" onkeyup="searchSellers()">
+            </div>
+            <div class="nav-buttons">
+                <a href="index.html" class="btn btn-outline"><i class="fas fa-home"></i> Home</a>
+                <a href="user-profile.html" class="btn btn-outline"><i class="fas fa-user"></i> Profile</a>
+                <a href="cart.html" class="btn btn-outline"><i class="fas fa-shopping-cart"></i> Cart</a>
+                <a href="notification.html" class="btn btn-outline"><i class="fas fa-bell"></i> Notifications</a>
+                <a href="track-order.html" class="btn btn-outline"><i class="fas fa-truck"></i> Track</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main>
+        <div class="container">
+            <div class="seller-listing">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+                    <h2>Wind Energy Sellers</h2>
+                    <div>
+                        <select id="sortSelect" onchange="sortSellers()" class="form-control" style="width: auto;">
+                            <option value="default">Sort By</option>
+                            <option value="priceAsc">Price: Low to High</option>
+                            <option value="priceDesc">Price: High to Low</option>
+                            <option value="quantityDesc">Quantity: High to Low</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div id="sellersList">
+                    <!-- Sellers will be populated here by JavaScript -->
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-column">
+                <h3>Company</h3>
+                <ul class="footer-links">
+                    <li><a href="#">About Us</a></li>
+                    <li><a href="#">Our Team</a></li>
+                    <li><a href="#">Careers</a></li>
+                    <li><a href="#">Contact Us</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h3>Services</h3>
+                <ul class="footer-links">
+                    <li><a href="solar.html">Solar Electricity</a></li>
+                    <li><a href="wind.html">Wind Electricity</a></li>
+                    <li><a href="#">Become a Seller</a></li>
+                    <li><a href="#">Business Solutions</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h3>Help & Support</h3>
+                <ul class="footer-links">
+                    <li><a href="#">FAQ</a></li>
+                    <li><a href="#">Shipping Policy</a></li>
+                    <li><a href="#">Returns & Refunds</a></li>
+                    <li><a href="#">Payment Options</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h3>Connect With Us</h3>
+                <ul class="footer-links">
+                    <li><a href="#"><i class="fab fa-facebook"></i> Facebook</a></li>
+                    <li><a href="#"><i class="fab fa-twitter"></i> Twitter</a></li>
+                    <li><a href="#"><i class="fab fa-instagram"></i> Instagram</a></li>
+                    <li><a href="#"><i class="fab fa-linkedin"></i> LinkedIn</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="copyright">
+            <p>&copy; 2025 Green Energy Trading. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Initialize cart array
+        let cart = JSON.parse(localStorage.getItem('cart')) || [];
+        
+        // Generate random sellers
+        const sellers = [];
+        for (let i = 1; i <= 20; i++) {
+            const quantity = Math.floor(Math.random() * 1000) + 500;
+            const price = Math.floor(Math.random() * 10) + 5;
+            sellers.push({
+                id: i,
+                name: `Wind Producer ${i}`,
+                company: `WindPower ${String.fromCharCode(64 + i)}`,
+                location: ['Gujarat', 'Tamil Nadu', 'Maharashtra', 'Rajasthan', 'Karnataka', 'Andhra Pradesh'][Math.floor(Math.random() * 6)],
+                quantity: quantity,
+                unit: 'kWh',
+                price: price,
+                rating: Math.floor(Math.random() * 2) + 4, // 4 or 5 star rating
+                image: `https://source.unsplash.com/random/100x100/?wind,turbine&sig=${i}`
+            });
+        }
+        
+        // Display sellers function
+        function displaySellers(sellerArray) {
+            const sellersList = document.getElementById('sellersList');
+            sellersList.innerHTML = '';
+            
+            if (sellerArray.length === 0) {
+                sellersList.innerHTML = '<p>No sellers found matching your search.</p>';
+                return;
+            }
+            
+            sellerArray.forEach(seller => {
+                // Create seller card
+                const sellerCard = document.createElement('div');
+                sellerCard.className = 'seller-card animate-fade-in';
+                
+                // Create seller info section
+                const sellerInfo = document.createElement('div');
+                sellerInfo.className = 'seller-info';
+                
+                // Create ratings
+                let starsHTML = '';
+                for (let i = 0; i < seller.rating; i++) {
+                    starsHTML += '<i class="fas fa-star" style="color: #FFC107;"></i>';
+                }
+                
+                sellerInfo.innerHTML = `
+                    <h3 class="seller-name">${seller.name}</h3>
+                    <p>${seller.company} · ${seller.location}</p>
+                    <div>${starsHTML}</div>
+                    <div class="seller-details">
+                        <p>Available: <span>${seller.quantity} ${seller.unit}</span></p>
+                        <p>Price: <span>₹${seller.price}/unit</span></p>
+                    </div>
+                `;
+                
+                // Create seller actions section
+                const sellerActions = document.createElement('div');
+                sellerActions.className = 'seller-actions';
+                
+                const qtyInput = document.createElement('input');
+                qtyInput.type = 'number';
+                qtyInput.min = '1';
+                qtyInput.max = seller.quantity;
+                qtyInput.value = '100';
+                qtyInput.className = 'energy-input';
+                qtyInput.id = `qty-${seller.id}`;
+                
+                const addButton = document.createElement('button');
+                addButton.className = 'btn btn-primary';
+                addButton.innerHTML = '<i class="fas fa-cart-plus"></i> Add to Cart';
+                addButton.onclick = function() {
+                    addToCart(seller.id);
+                };
+                
+                sellerActions.appendChild(qtyInput);
+                sellerActions.appendChild(addButton);
+                
+                // Append all elements
+                sellerCard.appendChild(sellerInfo);
+                sellerCard.appendChild(sellerActions);
+                sellersList.appendChild(sellerCard);
+            });
+        }
+        
+        // Search function
+        function searchSellers() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const filteredSellers = sellers.filter(seller => {
+                return (
+                    seller.name.toLowerCase().includes(searchTerm) ||
+                    seller.company.toLowerCase().includes(searchTerm) ||
+                    seller.location.toLowerCase().includes(searchTerm)
+                );
+            });
+            displaySellers(filteredSellers);
+        }
+        
+        // Sort function
+        function sortSellers() {
+            const sortValue = document.getElementById('sortSelect').value;
+            let sortedSellers = [...sellers];
+            
+            switch (sortValue) {
+                case 'priceAsc':
+                    sortedSellers.sort((a, b) => a.price - b.price);
+                    break;
+                case 'priceDesc':
+                    sortedSellers.sort((a, b) => b.price - a.price);
+                    break;
+                case 'quantityDesc':
+                    sortedSellers.sort((a, b) => b.quantity - a.quantity);
+                    break;
+                default:
+                    // Default sort (by seller ID)
+                    sortedSellers.sort((a, b) => a.id - b.id);
+            }
+            
+            displaySellers(sortedSellers);
+        }
+        
+        // Add to cart function
+        function addToCart(sellerId) {
+            const seller = sellers.find(s => s.id === sellerId);
+            const quantityInput = document.getElementById(`qty-${sellerId}`);
+            const quantity = parseInt(quantityInput.value);
+            
+            if (isNaN(quantity) || quantity <= 0 || quantity > seller.quantity) {
+                alert('Please enter a valid quantity!');
+                return;
+            }
+            
+            const totalPrice = seller.price * quantity;
+            
+            const cartItem = {
+                id: Date.now(),
+                sellerId: seller.id,
+                sellerName: seller.name,
+                company: seller.company,
+                energyType: 'Wind',
+                quantity: quantity,
+                unit: seller.unit,
+                pricePerUnit: seller.price,
+                totalPrice: totalPrice
+            };
+            
+            cart.push(cartItem);
+            localStorage.setItem('cart', JSON.stringify(cart));
+            
+            // Show confirmation
+            const confirmationDiv = document.createElement('div');
+            confirmationDiv.style.position = 'fixed';
+            confirmationDiv.style.top = '20px';
+            confirmationDiv.style.left = '50%';
+            confirmationDiv.style.transform = 'translateX(-50%)';
+            confirmationDiv.style.backgroundColor = 'var(--success)';
+            confirmationDiv.style.color = 'white';
+            confirmationDiv.style.padding = '16px';
+            confirmationDiv.style.borderRadius = '8px';
+            confirmationDiv.style.zIndex = '1000';
+            confirmationDiv.style.boxShadow = '0 4px 12px rgba(0,0,0,0.15)';
+            confirmationDiv.innerHTML = `<i class="fas fa-check-circle"></i> Added ${quantity} ${seller.unit} from ${seller.name} to cart!`;
+            
+            document.body.appendChild(confirmationDiv);
+            
+            setTimeout(() => {
+                confirmationDiv.style.opacity = '0';
+                confirmationDiv.style.transition = 'opacity 0.5s ease';
+                setTimeout(() => {
+                    document.body.removeChild(confirmationDiv);
+                }, 500);
+            }, 3000);
+        }
+        
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            displaySellers(sellers);
+            
+            // Initialize animation for elements
+            const animateElements = document.querySelectorAll('.animate-fade-in');
+            
+            function checkScroll() {
+                animateElements.forEach(element => {
+                    const elementTop = element.getBoundingClientRect().top;
+                    const windowHeight = window.innerHeight;
+                    
+                    if (elementTop < windowHeight - 100) {
+                        element.style.opacity = 1;
+                        element.style.transform = 'translateY(0)';
+                    }
+                });
+            }
+            
+            // Initialize elements
+            animateElements.forEach(element => {
+                element.style.opacity = 0;
+                element.style.transform = 'translateY(20px)';
+                element.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+            });
+            
+            // Check on load and scroll
+            window.addEventListener('load', checkScroll);
+            window.addEventListener('scroll', checkScroll);
+        });
+    </script>
+</body>
+</html>

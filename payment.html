@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment - Green Energy Trading</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <h1><i class="fas fa-credit-card"></i> Payment Options</h1>
+        </div>
+    </header>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container nav-container">
+            <div class="nav-buttons">
+                <a href="index.html" class="btn btn-outline"><i class="fas fa-home"></i> Home</a>
+                <a href="cart.html" class="btn btn-outline"><i class="fas fa-shopping-cart"></i> Back to Cart</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main>
+        <div class="container">
+            <div class="payment-options animate-fade-in">
+                <h2 style="margin-bottom: 24px;">Select Payment Method</h2>
+                
+                <div class="payment-option" onclick="selectPaymentOption('cod', this)">
+                    <div class="payment-option-icon">
+                        <i class="fas fa-money-bill-wave"></i>
+                    </div>
+                    <div class="payment-option-details">
+                        <h3>Cash on Delivery</h3>
+                        <p>Pay when your electricity connection is established</p>
+                    </div>
+                </div>
+                
+                <div class="payment-option" onclick="selectPaymentOption('card', this)">
+                    <div class="payment-option-icon">
+                        <i class="fas fa-credit-card"></i>
+                    </div>
+                    <div class="payment-option-details">
+                        <h3>Credit/Debit Card</h3>
+                        <p>Pay securely using your card</p>
+                    </div>
+                </div>
+                
+                <div class="payment-option" onclick="selectPaymentOption('upi', this)">
+                    <div class="payment-option-icon">
+                        <i class="fas fa-mobile-alt"></i>
+                    </div>
+                    <div class="payment-option-details">
+                        <h3>UPI Payment</h3>
+                        <p>Pay using any UPI app like PhonePe, Google Pay, Paytm</p>
+                    </div>
+                </div>
+                
+                <div class="payment-option" onclick="selectPaymentOption('netbanking', this)">
+                    <div class="payment-option-icon">
+                        <i class="fas fa-university"></i>
+                    </div>
+                    <div class="payment-option-details">
+                        <h3>Net Banking</h3>
+                        <p>Pay using your bank's online services</p>
+                    </div>
+                </div>
+                
+                <div class="payment-summary">
+                    <h3>Order Summary</h3>
+                    <div id="summaryDetails" style="margin: 16px 0;">
+                        <!-- Order summary will be loaded here -->
+                    </div>
+                    <button id="placeOrderBtn" class="checkout-btn" disabled onclick="placeOrder()">
+                        Select a payment method
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-column">
+                <h3>Company</h3>
+                <ul class="footer-links">
+                    <li><a href="#">About Us</a></li>
+                    <li><a href="#">Our Team</a></li>
+                    <li><a href="#">Careers</a></li>
+                    <li><a href="#">Contact Us</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h3>Services</h3>
+                <ul class="footer-links">
+                    <li><a href="solar.html">Solar Electricity</a></li>
+                    <li><a href="wind.html">Wind Electricity</a></li>
+                    <li><a href="#">Become a Seller</a></li>
+                    <li><a href="#">Business Solutions</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h3>Help & Support</h3>
+                <ul class="footer-links">
+                    <li><a href="#">FAQ</a></li>
+                    <li><a href="#">Shipping Policy</a></li>
+                    <li><a href="#">Returns & Refunds</a></li>
+                    <li><a href="#">Payment Options</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h3>Connect With Us</h3>
+                <ul class="footer-links">
+                    <li><a href="#"><i class="fab fa-facebook"></i> Facebook</a></li>
+                    <li><a href="#"><i class="fab fa-twitter"></i> Twitter</a></li>
+                    <li><a href="#"><i class="fab fa-instagram"></i> Instagram</a></li>
+                    <li><a href="#"><i class="fab fa-linkedin"></i> LinkedIn</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="copyright">
+            <p>&copy; 2025 Green Energy Trading. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        let selectedPaymentMethod = null;
+        let orderSummary = JSON.parse(localStorage.getItem('orderSummary')) || null;
+        
+        // Function to display order summary
+        function displayOrderSummary() {
+            const summaryDetails = document.getElementById('summaryDetails');
+            
+            if (!orderSummary) {
+                summaryDetails.innerHTML = '<p>No order information available. Please go back to cart.</p>';
+                return;
+            }
+            
+            let itemsHTML = '';
+            
+            orderSummary.items.forEach(item => {
+                const iconClass = item.energyType === 'Solar' ? 'fa-sun' : 'fa-wind';
+                const iconColor = item.energyType === 'Solar' ? '#FFC107' : '#2196F3';
+                
+                itemsHTML += `
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                        <span><i class="fas ${iconClass}" style="color: ${iconColor};"></i> ${item.quantity} ${item.unit} from ${item.sellerName}</span>
+                        <span>₹${item.totalPrice.toFixed(2)}</span>
+                    </div>
+                `;
+            });
+            
+            summaryDetails.innerHTML = `
+                <div style="margin-bottom: 16px;">
+                    ${itemsHTML}
+                </div>
+                <div style="padding-top: 16px; border-top: 1px solid var(--neutral-light);">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                        <span>Subtotal</span>
+                        <span>₹${orderSummary.subtotal.toFixed(2)}</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                        <span>Tax (18% GST)</span>
+                        <span>₹${orderSummary.tax.toFixed(2)}</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                        <span>Delivery Fee</span>
+                        <span>₹${orderSummary.deliveryFee.toFixed(2)}</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; font-weight: bold; margin-top: 8px; font-size: 18px;">
+                        <span>Total</span>
+                        <span>₹${orderSummary.total.toFixed(2)}</span>
+                    </div>
+                </div>
+            `;
+        }
+        
+        // Function to select payment option
+        function selectPaymentOption(method, element) {
+            // Remove selected class from all options
+            document.querySelectorAll('.payment-option').forEach(option => {
+                option.classList.remove('selected');
+            });
+            
+            // Add selected class to clicked option
+            element.classList.add('selected');
+            
+            // Update selected payment method
+            selectedPaymentMethod = method;
+            
+            // Update button text and enable
+            const placeOrderBtn = document.getElementById('placeOrderBtn');
+            placeOrderBtn.removeAttribute('disabled');
+            
+            if (method === 'cod') {
+                placeOrderBtn.innerHTML = '<i class="fas fa-money-bill-wave"></i> Place Order with Cash on Delivery';
+            } else if (method === 'card') {
+                placeOrderBtn.innerHTML = '<i class="fas fa-credit-card"></i> Continue to Card Payment';
+            } else if (method === 'upi') {
+                placeOrderBtn.innerHTML = '<i class="fas fa-mobile-alt"></i> Continue to UPI Payment';
+            } else if (method === 'netbanking') {
+                placeOrderBtn.innerHTML = '<i class="fas fa-university"></i> Continue to Net Banking';
+            }
+        }
+        
+        // Function to place order
+        function placeOrder() {
+            if (!selectedPaymentMethod) {
+                alert('Please select a payment method!');
+                return;
+            }
+            
+            if (selectedPaymentMethod === 'card') {
+                // Redirect to card payment page
+                window.location.href = 'card-payment.html';
+                return;
+            } else if (selectedPaymentMethod === 'upi') {
+                // For demo purposes, we'll create a simple UPI popup
+                const upiId = prompt('Enter your UPI ID:', 'your-name@upi');
+                if (!upiId) return;
+                createOrder(selectedPaymentMethod);
+            } else if (selectedPaymentMethod === 'netbanking') {
+                // For demo purposes, select a demo bank
+                const banks = ['SBI', 'HDFC', 'ICICI', 'Axis', 'Kotak'];
+                const bank = prompt('Select your bank:\n' + banks.join('\n'));
+                if (!bank) return;
+                createOrder(selectedPaymentMethod);
+            } else {
+                // Cash on delivery
+                createOrder('cod');
+            }
+        }
+        
+        // Function to create order and redirect
+        function createOrder(paymentMethod) {
+            if (!orderSummary) {
+                alert('Order information is missing. Please try again.');
+                window.location.href = 'cart.html';
+                return;
+            }
+            
+            // Create order object
+            const order = {
+                id: 'ORD' + Date.now(),
+                date: new Date().toISOString(),
+                items: orderSummary.items,
+                subtotal: orderSummary.subtotal,
+                tax: orderSummary.tax,
+                deliveryFee: orderSummary.deliveryFee,
+                total: orderSummary.total,
+                paymentMethod: paymentMethod,
+                status: 'Processing',
+                estimatedDelivery: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000).toISOString()
+            };
+            
+            // Save order to localStorage
+            const orders = JSON.parse(localStorage.getItem('orders')) || [];
+            orders.push(order);
+            localStorage.setItem('orders', JSON.stringify(orders));
+            
+            // Clear cart
+            localStorage.removeItem('cart');
+            localStorage.removeItem('orderSummary');
+            
+            // Create notification for this order
+            const notifications = JSON.parse(localStorage.getItem('notifications')) || [];
+            notifications.push({
+                id: Date.now(),
+                type: 'order_placed',
+                title: 'Order Placed Successfully',
+                message: `Your order #${order.id} has been placed successfully and is being processed.`,
+                timestamp: new Date().toISOString(),
+                read: false
+            });
+            localStorage.setItem('notifications', JSON.stringify(notifications));
+            
+            // Redirect to order tracking page
+            alert('Order placed successfully! Redirecting to order tracking.');
+            window.location.href = 'track-order.html';
+        }
+        
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            displayOrderSummary();
+            
+            // Redirect if no order summary exists
+            if (!orderSummary) {
+                alert('No order information found. Redirecting to cart.');
+                window.location.href = 'cart.html';
+            }
+            
+            // Initialize animation for elements
+            const animateElements = document.querySelectorAll('.animate-fade-in');
+            animateElements.forEach(element => {
+                element.style.opacity = 1;
+                element.style.transform = 'translateY(0)';
+            });
+        });
+    </script>
+</body>
+</html>

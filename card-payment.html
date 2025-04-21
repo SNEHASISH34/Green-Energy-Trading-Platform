@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Card Payment - Green Energy Trading</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <h1><i class="fas fa-credit-card"></i> Card Payment</h1>
+        </div>
+    </header>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container nav-container">
+            <div class="nav-buttons">
+                <a href="payment.html" class="btn btn-outline"><i class="fas fa-arrow-left"></i> Back to Payment Options</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main>
+        <div class="container">
+            <div class="card-form animate-fade-in">
+                <h2 style="margin-bottom: 24px;">Enter Card Details</h2>
+                
+                <div class="form-group">
+                    <label for="cardName">Cardholder Name</label>
+                    <input type="text" id="cardName" class="form-control" placeholder="Enter name as on card">
+                </div>
+                
+                <div class="form-group">
+                    <label for="cardNumber">Card Number</label>
+                    <input type="text" id="cardNumber" class="form-control" placeholder="1234 5678 9012 3456" maxlength="19" onkeyup="formatCardNumber()">
+                </div>
+                
+                <div class="card-row">
+                    <div class="form-group">
+                        <label for="expiryDate">Expiry Date</label>
+                        <input type="text" id="expiryDate" class="form-control" placeholder="MM/YY" maxlength="5" onkeyup="formatExpiryDate()">
+                    </div>
+                    <div class="form-group">
+                        <label for="cvv">CVV</label>
+                        <input type="password" id="cvv" class="form-control" placeholder="123" maxlength="3">
+                    </div>
+                </div>
+                
+                <div class="payment-summary">
+                    <h3>Order Summary</h3>
+                    <div id="cardSummaryDetails" style="margin: 16px 0;">
+                        <!-- Order summary will be loaded here -->
+                    </div>
+                    <button id="cardPayButton" class="checkout-btn" onclick="processCardPayment()">
+                        <i class="fas fa-lock"></i> Pay Securely
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-column">
+                <h3>Company</h3>
+                <ul class="footer-links">
+                    <li><a href="#">About Us</a></li>
+                    <li><a href="#">Our Team</a></li>
+                    <li><a href="#">Careers</a></li>
+                    <li><a href="#">Contact Us</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h3>Services</h3>
+                <ul class="footer-links">
+                    <li><a href="solar.html">Solar Electricity</a></li>
+                    <li><a href="wind.html">Wind Electricity</a></li>
+                    <li><a href="#">Become a Seller</a></li>
+                    <li><a href="#">Business Solutions</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h3>Help & Support</h3>
+                <ul class="footer-links">
+                    <li><a href="#">FAQ</a></li>
+                    <li><a href="#">Shipping Policy</a></li>
+                    <li><a href="#">Returns & Refunds</a></li>
+                    <li><a href="#">Payment Options</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h3>Connect With Us</h3>
+                <ul class="footer-links">
+                    <li><a href="#"><i class="fab fa-facebook"></i> Facebook</a></li>
+                    <li><a href="#"><i class="fab fa-twitter"></i> Twitter</a></li>
+                    <li><a href="#"><i class="fab fa-instagram"></i> Instagram</a></li>
+                    <li><a href="#"><i class="fab fa-linkedin"></i> LinkedIn</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="copyright">
+            <p>&copy; 2025 Green Energy Trading. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        let orderSummary = JSON.parse(localStorage.getItem('orderSummary')) || null;
+        
+        // Function to display order summary
+        function displayOrderSummary() {
+            const summaryDetails = document.getElementById('cardSummaryDetails');
+            
+            if (!orderSummary) {
+                summaryDetails.innerHTML = '<p>No order information available. Please go back to cart.</p>';
+                return;
+            }
+            
+            summaryDetails.innerHTML = `
+                <div style="padding-bottom: 16px; margin-bottom: 16px; border-bottom: 1px solid var(--neutral-light);">
+                    <p>${orderSummary.items.length} item(s) in your order</p>
+                </div>
+                <div style="margin-bottom: 16px;">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                        <span>Subtotal</span>
+                        <span>₹${orderSummary.subtotal.toFixed(2)}</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                        <span>Tax (18% GST)</span>
+                        <span>₹${orderSummary.tax.toFixed(2)}</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                        <span>Delivery Fee</span>
+                        <span>₹${orderSummary.deliveryFee.toFixed(2)}</span>
+                    </div>
+                </div>
+                <div style="display: flex; justify-content: space-between; font-weight: bold; margin-top: 8px; font-size: 18px; padding-top: 8px; border-top: 1px solid var(--neutral-light);">
+                    <span>Total</span>
+                    <span>₹${orderSummary.total.toFixed(2)}</span>
+                </div>
+            `;
+            
+            // Update pay button text
+            document.getElementById('cardPayButton').innerHTML = `<i class="fas fa-lock"></i> Pay ₹${orderSummary.total.toFixed(2)} Securely`;
+        }
+        
+        // Function to format card number with spaces
+        function formatCardNumber() {
+            const input = document.getElementById('cardNumber');
+            const value = input.value.replace(/\s+/g, '').replace(/[^0-9]/gi, '');
+            const matches = value.match(/\d{4,16}/g);
+            const match = matches && matches[0] || '';
+            const parts = [];
+            
+            for (let i = 0; i < match.length; i += 4) {
+                parts.push(match.substring(i, i + 4));
+            }
+            
+            if (parts.length) {
+                input.value = parts.join(' ');
+            } else {
+                input.value = value;
+            }
+        }
+        
+        // Function to format expiry date
+        function formatExpiryDate() {
+            const input = document.getElementById('expiryDate');
+            const value = input.value.replace(/\s+/g, '').replace(/[^0-9]/gi, '');
+            
+            if (value.length >= 2) {
+                const month = parseInt(value.substring(0, 2));
+                
+                if (month > 12) {
+                    input.value = '12' + (value.length > 2 ? '/' + value.substring(2) : '');
+                } else {
+                    input.value = value.substring(0, 2) + (value.length > 2 ? '/' + value.substring(2) : '');
+                }
+            } else {
+                input.value = value;
+            }
+        }
+        
+        // Function to process card payment
+        function processCardPayment() {
+            const cardName = document.getElementById('cardName').value.trim();
+            const cardNumber = document.getElementById('cardNumber').value.replace(/\s+/g, '');
+            const expiryDate = document.getElementById('expiryDate').value;
+            const cvv = document.getElementById('cvv').value;
+            
+            // Simple validation
+            if (!cardName) {
+                alert('Please enter cardholder name');
+                return;
+            }
+            
+            if (cardNumber.length < 16) {
+                alert('Please enter a valid card number');
+                return;
+            }
+            
+            if (expiryDate.length < 5) {
+                alert('Please enter a valid expiry date (MM/YY)');
+                return;
+            }
+            
+            if (cvv.length < 3) {
+                alert('Please enter a valid CVV');
+                return;
+            }
+            
+            // Show processing animation
+            const payButton = document.getElementById('cardPayButton');
+            payButton.disabled = true;
+            payButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing Payment...';
+            
+            // Simulate processing delay
+            setTimeout(() => {
+                // Create order with card payment method
+                createOrder('card');
+            }, 2000);
+        }
+        
+        // Function to create order and redirect
+        function createOrder(paymentMethod) {
+            if (!orderSummary) {
+                alert('Order information is missing. Please try again.');
+                window.location.href = 'cart.html';
+                return;
+            }
+            
+            // Create order object
+            const order = {
+                id: 'ORD' + Date.now(),
+                date: new Date().toISOString(),
+                items: orderSummary.items,
+                subtotal: orderSummary.subtotal,
+                tax: orderSummary.tax,
+                deliveryFee: orderSummary.deliveryFee,
+                total: orderSummary.total,
+                paymentMethod: paymentMethod,
+                status: 'Processing',
+                estimatedDelivery: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000).toISOString()
+            };
+            
+            // Save order to localStorage
+            const orders = JSON.parse(localStorage.getItem('orders')) || [];
+            orders.push(order);
+            localStorage.setItem('orders', JSON.stringify(orders));
+            
+            // Clear cart
+            localStorage.removeItem('cart');
+            localStorage.removeItem('orderSummary');
+            
+            // Create notification for this order
+            const notifications = JSON.parse(localStorage.getItem('notifications')) || [];
+            notifications.push({
+                id: Date.now(),
+                type: 'order_placed',
+                title: 'Order Placed Successfully',
+                message: `Your order #${order.id} has been placed successfully and is being processed.`,
+                timestamp: new Date().toISOString(),
+                read: false
+            });
+            localStorage.setItem('notifications', JSON.stringify(notifications));
+            
+            // Redirect to order tracking page
+            alert('Payment successful! Order has been placed. Redirecting to order tracking.');
+            window.location.href = 'track-order.html';
+        }
+        
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            displayOrderSummary();
+            
+            // Redirect if no order summary exists
+            if (!orderSummary) {
+                alert('No order information found. Redirecting to cart.');
+                window.location.href = 'cart.html';
+            }
+            
+            // Initialize animation for elements
+            const animateElements = document.querySelectorAll('.animate-fade-in');
+            animateElements.forEach(element => {
+                element.style.opacity = 1;
+                element.style.transform = 'translateY(0)';
+            });
+        });
+    </script>
+</body>
+</html>

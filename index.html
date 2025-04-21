@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Green Energy Trading - Renewable Electricity Marketplace</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <h1><i class="fas fa-leaf"></i> Green Energy Trading</h1>
+            <button id="themeToggle" class="theme-toggle">
+                <i class="fas fa-sun"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container nav-container">
+            <div class="search-box">
+                <input type="text" placeholder="Search for sellers, products...">
+            </div>
+            <div class="nav-buttons">
+                <a href="index.html" class="btn btn-primary"><i class="fas fa-home"></i> Home</a>
+                <a href="user-profile.html" class="btn btn-outline"><i class="fas fa-user"></i> Profile</a>
+                <a href="cart.html" class="btn btn-outline"><i class="fas fa-shopping-cart"></i> Cart</a>
+                <a href="notification.html" class="btn btn-outline"><i class="fas fa-bell"></i> Notifications</a>
+                <a href="track-order.html" class="btn btn-outline"><i class="fas fa-truck"></i> Track</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="container">
+        <section class="hero animate-fade-in" style="text-align: center; padding: 40px 0;">
+            <h2 style="font-size: 32px; margin-bottom: 16px;">Welcome to Green Energy Trading</h2>
+            <p style="font-size: 18px; max-width: 800px; margin: 0 auto 24px;">Your marketplace for clean, renewable electricity. Buy directly from solar and wind energy producers and power your life sustainably.</p>
+            <a href="#energy-types" class="btn btn-primary" style="font-size: 18px; padding: 12px 24px;">Start Trading</a>
+        </section>
+
+        <section id="energy-types" class="categories animate-fade-in">
+            <div class="category-card solar" onclick="window.location.href='solar.html'">
+                <img src="https://images.unsplash.com/photo-1509391366360-2e959784a276?auto=format&fit=crop&w=800&h=500" alt="Solar Energy">
+                <div class="category-content">
+                    <h2>Solar Electricity</h2>
+                    <p>Harness the power of the sun with clean solar energy from 500+ sellers</p>
+                </div>
+            </div>
+            <div class="category-card wind" onclick="window.location.href='wind.html'">
+                <img src="https://images.unsplash.com/photo-1532601224476-15c79f2f7a51?auto=format&fit=crop&w=800&h=500" alt="Wind Energy">
+                <div class="category-content">
+                    <h2>Wind Electricity</h2>
+                    <p>Tap into sustainable wind power from 500+ producers nationwide</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="features" style="margin: 48px 0;">
+            <h2 style="text-align: center; margin-bottom: 32px;">Why Choose Green Energy Trading?</h2>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 24px;">
+                <div style="background-color: var(--card-bg); padding: 24px; border-radius: 8px; box-shadow: var(--card-shadow); text-align: center;">
+                    <i class="fas fa-leaf" style="font-size: 48px; color: var(--primary-color); margin-bottom: 16px;"></i>
+                    <h3 style="margin-bottom: 12px;">100% Renewable</h3>
+                    <p>All electricity on our platform comes from certified renewable sources.</p>
+                </div>
+                <div style="background-color: var(--card-bg); padding: 24px; border-radius: 8px; box-shadow: var(--card-shadow); text-align: center;">
+                    <i class="fas fa-rupee-sign" style="font-size: 48px; color: var(--primary-color); margin-bottom: 16px;"></i>
+                    <h3 style="margin-bottom: 12px;">Competitive Pricing</h3>
+                    <p>Direct from producers means better rates than traditional utilities.</p>
+                </div>
+                <div style="background-color: var(--card-bg); padding: 24px; border-radius: 8px; box-shadow: var(--card-shadow); text-align: center;">
+                    <i class="fas fa-users" style="font-size: 48px; color: var(--primary-color); margin-bottom: 16px;"></i>
+                    <h3 style="margin-bottom: 12px;">Support Local Producers</h3>
+                    <p>Buy directly from small and medium-sized renewable energy producers.</p>
+                </div>
+                <div style="background-color: var(--card-bg); padding: 24px; border-radius: 8px; box-shadow: var(--card-shadow); text-align: center;">
+                    <i class="fas fa-truck" style="font-size: 48px; color: var(--primary-color); margin-bottom: 16px;"></i>
+                    <h3 style="margin-bottom: 12px;">Fast Delivery</h3>
+                    <p>Quick and reliable delivery of energy to your connection point.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-column">
+                <h3>Company</h3>
+                <ul class="footer-links">
+                    <li><a href="#">About Us</a></li>
+                    <li><a href="#">Our Team</a></li>
+                    <li><a href="#">Careers</a></li>
+                    <li><a href="#">Contact Us</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h3>Services</h3>
+                <ul class="footer-links">
+                    <li><a href="solar.html">Solar Electricity</a></li>
+                    <li><a href="wind.html">Wind Electricity</a></li>
+                    <li><a href="#">Become a Seller</a></li>
+                    <li><a href="#">Business Solutions</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h3>Help & Support</h3>
+                <ul class="footer-links">
+                    <li><a href="#">FAQ</a></li>
+                    <li><a href="#">Shipping Policy</a></li>
+                    <li><a href="#">Returns & Refunds</a></li>
+                    <li><a href="#">Payment Options</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h3>Connect With Us</h3>
+                <ul class="footer-links">
+                    <li><a href="#"><i class="fab fa-facebook"></i> Facebook</a></li>
+                    <li><a href="#"><i class="fab fa-twitter"></i> Twitter</a></li>
+                    <li><a href="#"><i class="fab fa-instagram"></i> Instagram</a></li>
+                    <li><a href="#"><i class="fab fa-linkedin"></i> LinkedIn</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="copyright">
+            <p>&copy; 2025 Green Energy Trading. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Check if user is logged in
+        document.addEventListener('DOMContentLoaded', function() {
+            const user = localStorage.getItem('currentUser');
+            if (!user && window.location.pathname !== '/sign-in.html' && window.location.pathname !== '/sign-up.html') {
+                window.location.href = 'sign-in.html';
+            }
+
+            // Theme toggle functionality
+            const themeToggle = document.getElementById('themeToggle');
+            const html = document.documentElement;
+            const icon = themeToggle.querySelector('i');
+
+            // Load saved theme
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            html.setAttribute('data-theme', savedTheme);
+            updateThemeIcon(savedTheme);
+
+            themeToggle.addEventListener('click', () => {
+                const currentTheme = html.getAttribute('data-theme');
+                const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+                
+                html.setAttribute('data-theme', newTheme);
+                localStorage.setItem('theme', newTheme);
+                updateThemeIcon(newTheme);
+            });
+
+            function updateThemeIcon(theme) {
+                icon.className = theme === 'light' ? 'fas fa-moon' : 'fas fa-sun';
+            }
+        });
+
+        // Animation for elements
+        const animateElements = document.querySelectorAll('.animate-fade-in');
+        
+        function checkScroll() {
+            animateElements.forEach(element => {
+                const elementTop = element.getBoundingClientRect().top;
+                const windowHeight = window.innerHeight;
+                
+                if (elementTop < windowHeight - 100) {
+                    element.style.opacity = 1;
+                    element.style.transform = 'translateY(0)';
+                }
+            });
+        }
+        
+        // Initialize elements
+        animateElements.forEach(element => {
+            element.style.opacity = 0;
+            element.style.transform = 'translateY(20px)';
+            element.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+        });
+        
+        // Check on load and scroll
+        window.addEventListener('load', checkScroll);
+        window.addEventListener('scroll', checkScroll);
+    </script>
+</body>
+</html>

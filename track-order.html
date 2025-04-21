@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Track Order - Green Energy Trading</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* Additional styles for tracking animation */
+        .processing-animation {
+            text-align: center;
+            padding: 40px 0;
+            margin-bottom: 32px;
+        }
+        
+        .processing-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background-color: var(--primary-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 24px;
+            animation: pulse 1.5s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.1); opacity: 0.8; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        
+        .processing-icon i {
+            font-size: 36px;
+            color: white;
+        }
+        
+        .processing-message {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+        
+        .tracking-progress {
+            position: relative;
+            height: 4px;
+            background-color: var(--neutral-light);
+            margin: 16px 0;
+            overflow: hidden;
+        }
+        
+        .tracking-progress-bar {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            background-color: var(--primary-color);
+            width: 0;
+            transition: width 0.5s ease;
+            animation: progress 2s forwards;
+        }
+        
+        @keyframes progress {
+            from { width: 0; }
+            to { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <h1><i class="fas fa-truck"></i> Track Your Order</h1>
+        </div>
+    </header>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container nav-container">
+            <div class="nav-buttons">
+                <a href="index.html" class="btn btn-outline"><i class="fas fa-home"></i> Home</a>
+                <a href="user-profile.html" class="btn btn-outline"><i class="fas fa-user"></i> Profile</a>
+                <a href="notification.html" class="btn btn-outline"><i class="fas fa-bell"></i> Notifications</a>
+                <a href="solar.html" class="btn btn-outline"><i class="fas fa-sun"></i> Shop Solar</a>
+                <a href="wind.html" class="btn btn-outline"><i class="fas fa-wind"></i> Shop Wind</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main>
+        <div class="container order-status">
+            <!-- Order Processing Animation (shows only for recent orders) -->
+            <div id="processingAnimation" class="processing-animation animate-fade-in" style="display: none;">
+                <div class="processing-icon">
+                    <i class="fas fa-bolt"></i>
+                </div>
+                <div class="processing-message">Your Order is Being Processed!</div>
+                <p>We're working on setting up your energy connection.</p>
+                <div class="tracking-progress">
+                    <div class="tracking-progress-bar"></div>
+                </div>
+            </div>
+            
+            <h2 style="margin-bottom: 24px;">Your Orders</h2>
+            
+            <div id="ordersList">
+                <!-- Orders will be loaded here -->
+                <div class="empty-orders" style="text-align: center; padding: 40px 0;">
+                    <i class="fas fa-box-open" style="font-size: 64px; color: #e0e0e0; margin-bottom: 16px;"></i>
+                    <h2>No orders found</h2>
+                    <p>You haven't placed any orders yet.</p>
+                    <div style="margin-top: 24px;">
+                        <a href="solar.html" class="btn btn-primary">Start Shopping</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-column">
+                <h3>Company</h3>
+                <ul class="footer-links">
+                    <li><a href="#">About Us</a></li>
+                    <li><a href="#">Our Team</a></li>
+                    <li><a href="#">Careers</a></li>
+                    <li><a href="#">Contact Us</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h3>Services</h3>
+                <ul class="footer-links">
+                    <li><a href="solar.html">Solar Electricity</a></li>
+                    <li><a href="wind.html">Wind Electricity</a></li>
+                    <li><a href="#">Become a Seller</a></li>
+                    <li><a href="#">Business Solutions</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h3>Help & Support</h3>
+                <ul class="footer-links">
+                    <li><a href="#">FAQ</a></li>
+                    <li><a href="#">Shipping Policy</a></li>
+                    <li><a href="#">Returns & Refunds</a></li>
+                    <li><a href="#">Payment Options</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h3>Connect With Us</h3>
+                <ul class="footer-links">
+                    <li><a href="#"><i class="fab fa-facebook"></i> Facebook</a></li>
+                    <li><a href="#"><i class="fab fa-twitter"></i> Twitter</a></li>
+                    <li><a href="#"><i class="fab fa-instagram"></i> Instagram</a></li>
+                    <li><a href="#"><i class="fab fa-linkedin"></i> LinkedIn</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="copyright">
+            <p>&copy; 2025 Green Energy Trading. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Get orders from localStorage
+        const orders = JSON.parse(localStorage.getItem('orders')) || [];
+        
+        // Function to format date
+        function formatDate(dateString) {
+            const options = { year: 'numeric', month: 'short', day: 'numeric' };
+            return new Date(dateString).toLocaleDateString('en-US', options);
+        }
+        
+        // Function to display order status
+        function getStatusClass(status) {
+            switch(status) {
+                case 'Processing':
+                    return {
+                        color: 'var(--primary-color)',
+                        icon: 'fa-gear fa-spin'
+                    };
+                case 'Shipped':
+                    return {
+                        color: 'var(--accent-wind)',
+                        icon: 'fa-truck'
+                    };
+                case 'Out for Delivery':
+                    return {
+                        color: 'var(--warning)',
+                        icon: 'fa-truck-fast'
+                    };
+                case 'Delivered':
+                    return {
+                        color: 'var(--success)',
+                        icon: 'fa-check-circle'
+                    };
+                case 'Cancelled':
+                    return {
+                        color: 'var(--error)',
+                        icon: 'fa-times-circle'
+                    };
+                default:
+                    return {
+                        color: 'var(--neutral-medium)',
+                        icon: 'fa-question-circle'
+                    };
+            }
+        }
+        
+        // Function to get step status
+        function getStepStatus(orderStatus, stepName) {
+            const steps = ['Processing', 'Shipped', 'Out for Delivery', 'Delivered'];
+            const orderStepIndex = steps.indexOf(orderStatus);
+            const stepIndex = steps.indexOf(stepName);
+            
+            if (orderStepIndex === -1) return 'pending';
+            
+            if (stepIndex < orderStepIndex) return 'completed';
+            if (stepIndex === orderStepIndex) return 'active';
+            return 'pending';
+        }
+        
+        // Function to display orders
+        function displayOrders() {
+            const ordersList = document.getElementById('ordersList');
+            const processingAnimation = document.getElementById('processingAnimation');
+            
+            // Sort orders by date (newest first)
+            const sortedOrders = [...orders].sort((a, b) => new Date(b.date) - new Date(a.date));
+            
+            if (sortedOrders.length === 0) {
+                ordersList.innerHTML = `
+                    <div class="empty-orders" style="text-align: center; padding: 40px 0;">
+                        <i class="fas fa-box-open" style="font-size: 64px; color: #e0e0e0; margin-bottom: 16px;"></i>
+                        <h2>No orders found</h2>
+                        <p>You haven't placed any orders yet.</p>
+                        <div style="margin-top: 24px;">
+                            <a href="solar.html" class="btn btn-primary">Start Shopping</a>
+                        </div>
+                    </div>
+                `;
+                return;
+            }
+            
+            // Check if there's a new order (less than 2 minutes ago)
+            const recentOrder = sortedOrders.find(order => {
+                return (new Date() - new Date(order.date)) < 2 * 60 * 1000;
+            });
+            
+            if (recentOrder) {
+                processingAnimation.style.display = 'block';
+            }
+            
+            // Clear previous content
+            ordersList.innerHTML = '';
+            
+            // Display each order
+            sortedOrders.forEach(order => {
+                const statusInfo = getStatusClass(order.status);
+                
+                // Create status tracker
+                let statusTracker = `
+                    <div class="status-tracker">
+                `;
+                
+                const steps = [
+                    { name: 'Processing', label: 'Processing' },
+                    { name: 'Shipped', label: 'Shipped' },
+                    { name: 'Out for Delivery', label: 'Out for Delivery' },
+                    { name: 'Delivered', label: 'Delivered' }
+                ];
+                
+                steps.forEach(step => {
+                    const stepStatus = getStepStatus(order.status, step.name);
+                    statusTracker += `
+                        <div class="status-step ${stepStatus}">
+                            <div class="step-icon">
+                                <i class="fas ${stepStatus === 'completed' ? 'fa-check' : stepStatus === 'active' ? 'fa-sync fa-spin' : 'fa-clock'}"></i>
+                            </div>
+                            <div class="step-label">${step.label}</div>
+                        </div>
+                    `;
+                });
+                
+                statusTracker += `</div>`;
+                
+                // Create order card
+                const orderCard = document.createElement('div');
+                orderCard.className = 'status-card animate-fade-in';
+                
+                // Payment method icon
+                let paymentIcon = '';
+                switch(order.paymentMethod) {
+                    case 'card':
+                        paymentIcon = '<i class="fas fa-credit-card"></i>';
+                        break;
+                    case 'cod':
+                        paymentIcon = '<i class="fas fa-money-bill-wave"></i>';
+                        break;
+                    case 'upi':
+                        paymentIcon = '<i class="fas fa-mobile-alt"></i>';
+                        break;
+                    case 'netbanking':
+                        paymentIcon = '<i class="fas fa-university"></i>';
+                        break;
+                }
+                
+                // Construct order items HTML
+                let itemsHTML = '';
+                order.items.forEach(item => {
+                    const iconClass = item.energyType === 'Solar' ? 'fa-sun' : 'fa-wind';
+                    const iconColor = item.energyType === 'Solar' ? '#FFC107' : '#2196F3';
+                    
+                    itemsHTML += `
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                            <span><i class="fas ${iconClass}" style="color: ${iconColor};"></i> ${item.quantity} ${item.unit} from ${item.sellerName}</span>
+                            <span>₹${item.totalPrice.toFixed(2)}</span>
+                        </div>
+                    `;
+                });
+                
+                orderCard.innerHTML = `
+                    <div class="status-header">
+                        <span class="order-id">Order #${order.id}</span>
+                        <span class="order-date">${formatDate(order.date)}</span>
+                    </div>
+                    
+                    <div style="display: flex; align-items: center; margin-bottom: 16px;">
+                        <div style="width: 24px; height: 24px; border-radius: 50%; background-color: ${statusInfo.color}; display: flex; align-items: center; justify-content: center; margin-right: 8px;">
+                            <i class="fas ${statusInfo.icon}" style="color: white; font-size: 12px;"></i>
+                        </div>
+                        <span style="font-weight: 500;">${order.status}</span>
+                        <div style="margin-left: auto; display: flex; align-items: center;">
+                            ${paymentIcon} 
+                            <span style="margin-left: 4px;">${
+                                order.paymentMethod === 'card' ? 'Card Payment' : 
+                                order.paymentMethod === 'cod' ? 'Cash on Delivery' :
+                                order.paymentMethod === 'upi' ? 'UPI Payment' : 'Net Banking'
+                            }</span>
+                        </div>
+                    </div>
+                    
+                    ${statusTracker}
+                    
+                    <div class="order-details">
+                        <h3 style="margin-bottom: 12px;">Order Items</h3>
+                        <div class="order-items">
+                            ${itemsHTML}
+                        </div>
+                        <div style="display: flex; justify-content: space-between; font-weight: bold; margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--neutral-light);">
+                            <span>Total</span>
+                            <span>₹${order.total.toFixed(2)}</span>
+                        </div>
+                    </div>
+                    
+                    <div style="margin-top: 16px; text-align: right;">
+                        <span style="color: var(--neutral-medium); font-size: 14px;">
+                            Estimated Delivery: ${formatDate(order.estimatedDelivery)}
+                        </span>
+                    </div>
+                `;
+                
+                ordersList.appendChild(orderCard);
+            });
+        }
+        
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            displayOrders();
+            
+            // Initialize animation for elements
+            const animateElements = document.querySelectorAll('.animate-fade-in');
+            
+            function checkScroll() {
+                animateElements.forEach(element => {
+                    const elementTop = element.getBoundingClientRect().top;
+                    const windowHeight = window.innerHeight;
+                    
+                    if (elementTop < windowHeight - 100) {
+                        element.style.opacity = 1;
+                        element.style.transform = 'translateY(0)';
+                    }
+                });
+            }
+            
+            // Initialize elements
+            animateElements.forEach(element => {
+                element.style.opacity = 0;
+                element.style.transform = 'translateY(20px)';
+                element.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+            });
+            
+            // Check on load and scroll
+            window.addEventListener('load', checkScroll);
+            window.addEventListener('scroll', checkScroll);
+        });
+    </script>
+</body>
+</html>

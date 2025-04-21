@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notifications - Green Energy Trading</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <h1><i class="fas fa-bell"></i> Notifications</h1>
+        </div>
+    </header>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container nav-container">
+            <div class="nav-buttons">
+                <a href="index.html" class="btn btn-outline"><i class="fas fa-home"></i> Home</a>
+                <a href="user-profile.html" class="btn btn-outline"><i class="fas fa-user"></i> Profile</a>
+                <a href="cart.html" class="btn btn-outline"><i class="fas fa-shopping-cart"></i> Cart</a>
+                <a href="track-order.html" class="btn btn-outline"><i class="fas fa-truck"></i> Track Orders</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main>
+        <div class="container notification-list">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+                <h2>Your Notifications</h2>
+                <button id="markAllReadBtn" class="btn btn-outline" onclick="markAllAsRead()">
+                    <i class="fas fa-check-double"></i> Mark All as Read
+                </button>
+            </div>
+            
+            <div id="notificationItems">
+                <!-- Notifications will be loaded here -->
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-column">
+                <h3>Company</h3>
+                <ul class="footer-links">
+                    <li><a href="#">About Us</a></li>
+                    <li><a href="#">Our Team</a></li>
+                    <li><a href="#">Careers</a></li>
+                    <li><a href="#">Contact Us</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h3>Services</h3>
+                <ul class="footer-links">
+                    <li><a href="solar.html">Solar Electricity</a></li>
+                    <li><a href="wind.html">Wind Electricity</a></li>
+                    <li><a href="#">Become a Seller</a></li>
+                    <li><a href="#">Business Solutions</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h3>Help & Support</h3>
+                <ul class="footer-links">
+                    <li><a href="#">FAQ</a></li>
+                    <li><a href="#">Shipping Policy</a></li>
+                    <li><a href="#">Returns & Refunds</a></li>
+                    <li><a href="#">Payment Options</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h3>Connect With Us</h3>
+                <ul class="footer-links">
+                    <li><a href="#"><i class="fab fa-facebook"></i> Facebook</a></li>
+                    <li><a href="#"><i class="fab fa-twitter"></i> Twitter</a></li>
+                    <li><a href="#"><i class="fab fa-instagram"></i> Instagram</a></li>
+                    <li><a href="#"><i class="fab fa-linkedin"></i> LinkedIn</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="copyright">
+            <p>&copy; 2025 Green Energy Trading. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Get notifications from localStorage or generate demo notifications
+        let notifications = JSON.parse(localStorage.getItem('notifications')) || [];
+        
+        // If no notifications exist, create some demo ones
+        if (notifications.length === 0) {
+            const demoNotifications = [
+                {
+                    id: Date.now() - 86400000, // 1 day ago
+                    type: 'welcome',
+                    title: 'Welcome to Green Energy Trading',
+                    message: 'Thank you for joining our green energy marketplace. Start trading clean energy today!',
+                    timestamp: new Date(Date.now() - 86400000).toISOString(),
+                    read: false
+                },
+                {
+                    id: Date.now() - 43200000, // 12 hours ago
+                    type: 'promo',
+                    title: 'Special Offer for First-Time Buyers',
+                    message: 'Get 10% off on your first purchase of solar energy. Limited time offer!',
+                    timestamp: new Date(Date.now() - 43200000).toISOString(),
+                    read: true
+                },
+                {
+                    id: Date.now() - 7200000, // 2 hours ago
+                    type: 'system',
+                    title: 'System Maintenance Notice',
+                    message: 'We will be performing system maintenance on June 15th from 2AM to 4AM IST.',
+                    timestamp: new Date(Date.now() - 7200000).toISOString(),
+                    read: false
+                }
+            ];
+            
+            notifications = demoNotifications;
+            localStorage.setItem('notifications', JSON.stringify(notifications));
+        }
+        
+        // Function to format time relative to now
+        function formatTimeAgo(dateString) {
+            const date = new Date(dateString);
+            const now = new Date();
+            const diffInSeconds = Math.floor((now - date) / 1000);
+            
+            if (diffInSeconds < 60) {
+                return 'Just now';
+            }
+            
+            const diffInMinutes = Math.floor(diffInSeconds / 60);
+            if (diffInMinutes < 60) {
+                return `${diffInMinutes} minute${diffInMinutes > 1 ? 's' : ''} ago`;
+            }
+            
+            const diffInHours = Math.floor(diffInMinutes / 60);
+            if (diffInHours < 24) {
+                return `${diffInHours} hour${diffInHours > 1 ? 's' : ''} ago`;
+            }
+            
+            const diffInDays = Math.floor(diffInHours / 24);
+            if (diffInDays < 30) {
+                return `${diffInDays} day${diffInDays > 1 ? 's' : ''} ago`;
+            }
+            
+            const options = { year: 'numeric', month: 'short', day: 'numeric' };
+            return date.toLocaleDateString('en-US', options);
+        }
+        
+        // Function to get notification icon based on type
+        function getNotificationIcon(type) {
+            switch(type) {
+                case 'welcome':
+                    return {
+                        icon: 'fa-handshake',
+                        color: 'var(--primary-color)'
+                    };
+                case 'order_placed':
+                    return {
+                        icon: 'fa-shopping-bag',
+                        color: 'var(--primary-color)'
+                    };
+                case 'order_shipped':
+                    return {
+                        icon: 'fa-truck',
+                        color: 'var(--accent-wind)'
+                    };
+                case 'order_delivered':
+                    return {
+                        icon: 'fa-check-circle',
+                        color: 'var(--success)'
+                    };
+                case 'promo':
+                    return {
+                        icon: 'fa-tag',
+                        color: 'var(--warning)'
+                    };
+                case 'system':
+                    return {
+                        icon: 'fa-cog',
+                        color: 'var(--neutral-medium)'
+                    };
+                default:
+                    return {
+                        icon: 'fa-bell',
+                        color: 'var(--primary-color)'
+                    };
+            }
+        }
+        
+        // Function to display notifications
+        function displayNotifications() {
+            const notificationItems = document.getElementById('notificationItems');
+            
+            // Sort notifications by timestamp (newest first)
+            const sortedNotifications = [...notifications].sort((a, b) => 
+                new Date(b.timestamp) - new Date(a.timestamp)
+            );
+            
+            if (sortedNotifications.length === 0) {
+                notificationItems.innerHTML = `
+                    <div style="text-align: center; padding: 40px 0;">
+                        <i class="fas fa-bell-slash" style="font-size: 64px; color: #e0e0e0; margin-bottom: 16px;"></i>
+                        <h2>No notifications</h2>
+                        <p>You don't have any notifications yet.</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            // Clear previous content
+            notificationItems.innerHTML = '';
+            
+            // Display each notification
+            sortedNotifications.forEach(notification => {
+                const { icon, color } = getNotificationIcon(notification.type);
+                
+                const notificationElement = document.createElement('div');
+                notificationElement.className = `notification-item ${!notification.read ? 'unread' : ''} animate-fade-in`;
+                notificationElement.onclick = function() {
+                    markAsRead(notification.id);
+                };
+                
+                notificationElement.innerHTML = `
+                    <div class="notification-icon" style="background-color: ${color}20;">
+                        <i class="fas ${icon}" style="color: ${color};"></i>
+                    </div>
+                    <div class="notification-content">
+                        <div class="notification-title">${notification.title}</div>
+                        <div class="notification-details">${notification.message}</div>
+                    </div>
+                    <div class="notification-time">${formatTimeAgo(notification.timestamp)}</div>
+                `;
+                
+                notificationItems.appendChild(notificationElement);
+            });
+        }
+        
+        // Function to mark a notification as read
+        function markAsRead(id) {
+            notifications = notifications.map(notification => {
+                if (notification.id === id) {
+                    return { ...notification, read: true };
+                }
+                return notification;
+            });
+            
+            localStorage.setItem('notifications', JSON.stringify(notifications));
+            displayNotifications();
+        }
+        
+        // Function to mark all notifications as read
+        function markAllAsRead() {
+            notifications = notifications.map(notification => {
+                return { ...notification, read: true };
+            });
+            
+            localStorage.setItem('notifications', JSON.stringify(notifications));
+            displayNotifications();
+            
+            // Show confirmation
+            const confirmationDiv = document.createElement('div');
+            confirmationDiv.style.position = 'fixed';
+            confirmationDiv.style.top = '20px';
+            confirmationDiv.style.left = '50%';
+            confirmationDiv.style.transform = 'translateX(-50%)';
+            confirmationDiv.style.backgroundColor = 'var(--success)';
+            confirmationDiv.style.color = 'white';
+            confirmationDiv.style.padding = '16px';
+            confirmationDiv.style.borderRadius = '8px';
+            confirmationDiv.style.zIndex = '1000';
+            confirmationDiv.style.boxShadow = '0 4px 12px rgba(0,0,0,0.15)';
+            confirmationDiv.innerHTML = `<i class="fas fa-check-circle"></i> All notifications marked as read`;
+            
+            document.body.appendChild(confirmationDiv);
+            
+            setTimeout(() => {
+                confirmationDiv.style.opacity = '0';
+                confirmationDiv.style.transition = 'opacity 0.5s ease';
+                setTimeout(() => {
+                    document.body.removeChild(confirmationDiv);
+                }, 500);
+            }, 3000);
+        }
+        
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            displayNotifications();
+            
+            // Initialize animation for elements
+            const animateElements = document.querySelectorAll('.animate-fade-in');
+            
+            function checkScroll() {
+                animateElements.forEach(element => {
+                    const elementTop = element.getBoundingClientRect().top;
+                    const windowHeight = window.innerHeight;
+                    
+                    if (elementTop < windowHeight - 100) {
+                        element.style.opacity = 1;
+                        element.style.transform = 'translateY(0)';
+                    }
+                });
+            }
+            
+            // Initialize elements
+            animateElements.forEach(element => {
+                element.style.opacity = 0;
+                element.style.transform = 'translateY(20px)';
+                element.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+            });
+            
+            // Check on load and scroll
+            window.addEventListener('load', checkScroll);
+            window.addEventListener('scroll', checkScroll);
+        });
+    </script>
+</body>
+</html>

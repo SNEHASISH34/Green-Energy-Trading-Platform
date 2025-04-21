@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopping Cart - Green Energy Trading</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <h1><i class="fas fa-shopping-cart"></i> Your Cart</h1>
+        </div>
+    </header>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container nav-container">
+            <div class="nav-buttons">
+                <a href="index.html" class="btn btn-outline"><i class="fas fa-home"></i> Home</a>
+                <a href="solar.html" class="btn btn-outline"><i class="fas fa-sun"></i> Solar</a>
+                <a href="wind.html" class="btn btn-outline"><i class="fas fa-wind"></i> Wind</a>
+                <a href="user-profile.html" class="btn btn-outline"><i class="fas fa-user"></i> Profile</a>
+                <a href="notification.html" class="btn btn-outline"><i class="fas fa-bell"></i> Notifications</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main>
+        <div class="container cart-container">
+            <div id="cartItems">
+                <!-- Cart items will be loaded here -->
+                <div class="empty-cart" style="text-align: center; padding: 40px 0;">
+                    <i class="fas fa-shopping-cart" style="font-size: 64px; color: #e0e0e0; margin-bottom: 16px;"></i>
+                    <h2>Your cart is empty</h2>
+                    <p>Looks like you haven't added any electricity yet.</p>
+                    <div style="margin-top: 24px;">
+                        <a href="solar.html" class="btn btn-primary" style="margin-right: 8px;">Shop Solar</a>
+                        <a href="wind.html" class="btn btn-outline">Shop Wind</a>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="cartSummary" class="cart-summary" style="display: none;">
+                <h3>Order Summary</h3>
+                <div id="subtotal" class="summary-row" style="display: flex; justify-content: space-between; margin: 8px 0;">
+                    <span>Subtotal</span>
+                    <span>₹0</span>
+                </div>
+                <div id="tax" class="summary-row" style="display: flex; justify-content: space-between; margin: 8px 0;">
+                    <span>Tax (18% GST)</span>
+                    <span>₹0</span>
+                </div>
+                <div id="delivery" class="summary-row" style="display: flex; justify-content: space-between; margin: 8px 0;">
+                    <span>Delivery Fee</span>
+                    <span>₹100</span>
+                </div>
+                <div class="cart-total">
+                    <span>Total</span>
+                    <span id="totalAmount">₹0</span>
+                </div>
+                <button id="checkoutBtn" class="checkout-btn" onclick="proceedToPayment()">
+                    <i class="fas fa-credit-card"></i> Proceed to Payment
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-column">
+                <h3>Company</h3>
+                <ul class="footer-links">
+                    <li><a href="#">About Us</a></li>
+                    <li><a href="#">Our Team</a></li>
+                    <li><a href="#">Careers</a></li>
+                    <li><a href="#">Contact Us</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h3>Services</h3>
+                <ul class="footer-links">
+                    <li><a href="solar.html">Solar Electricity</a></li>
+                    <li><a href="wind.html">Wind Electricity</a></li>
+                    <li><a href="#">Become a Seller</a></li>
+                    <li><a href="#">Business Solutions</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h3>Help & Support</h3>
+                <ul class="footer-links">
+                    <li><a href="#">FAQ</a></li>
+                    <li><a href="#">Shipping Policy</a></li>
+                    <li><a href="#">Returns & Refunds</a></li>
+                    <li><a href="#">Payment Options</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h3>Connect With Us</h3>
+                <ul class="footer-links">
+                    <li><a href="#"><i class="fab fa-facebook"></i> Facebook</a></li>
+                    <li><a href="#"><i class="fab fa-twitter"></i> Twitter</a></li>
+                    <li><a href="#"><i class="fab fa-instagram"></i> Instagram</a></li>
+                    <li><a href="#"><i class="fab fa-linkedin"></i> LinkedIn</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="copyright">
+            <p>&copy; 2025 Green Energy Trading. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Load cart from localStorage
+        let cart = JSON.parse(localStorage.getItem('cart')) || [];
+        
+        // Function to display cart items
+        function displayCart() {
+            const cartItemsContainer = document.getElementById('cartItems');
+            const cartSummary = document.getElementById('cartSummary');
+            const subtotalElement = document.getElementById('subtotal').querySelector('span:last-child');
+            const taxElement = document.getElementById('tax').querySelector('span:last-child');
+            const totalElement = document.getElementById('totalAmount');
+            
+            // Clear previous content
+            cartItemsContainer.innerHTML = '';
+            
+            if (cart.length === 0) {
+                // Show empty cart message
+                cartItemsContainer.innerHTML = `
+                    <div class="empty-cart" style="text-align: center; padding: 40px 0;">
+                        <i class="fas fa-shopping-cart" style="font-size: 64px; color: #e0e0e0; margin-bottom: 16px;"></i>
+                        <h2>Your cart is empty</h2>
+                        <p>Looks like you haven't added any electricity yet.</p>
+                        <div style="margin-top: 24px;">
+                            <a href="solar.html" class="btn btn-primary" style="margin-right: 8px;">Shop Solar</a>
+                            <a href="wind.html" class="btn btn-outline">Shop Wind</a>
+                        </div>
+                    </div>
+                `;
+                cartSummary.style.display = 'none';
+                return;
+            }
+            
+            // Show cart summary
+            cartSummary.style.display = 'block';
+            
+            // Calculate totals
+            let subtotal = 0;
+            
+            // Display each cart item
+            cart.forEach((item, index) => {
+                subtotal += item.totalPrice;
+                
+                const itemElement = document.createElement('div');
+                itemElement.className = 'cart-item animate-fade-in';
+                
+                // Icon based on energy type
+                const energyIcon = item.energyType === 'Solar' ? 
+                    '<i class="fas fa-sun" style="color: #FFC107;"></i>' : 
+                    '<i class="fas fa-wind" style="color: #2196F3;"></i>';
+                
+                itemElement.innerHTML = `
+                    <div class="cart-item-details">
+                        <h3>${energyIcon} ${item.sellerName}</h3>
+                        <p>${item.company} · ${item.energyType} Energy</p>
+                    </div>
+                    <div class="cart-item-quantity">
+                        <p>${item.quantity} ${item.unit}</p>
+                    </div>
+                    <div class="cart-item-price">
+                        <p>₹${item.pricePerUnit}/unit</p>
+                        <p><strong>₹${item.totalPrice}</strong></p>
+                    </div>
+                    <div class="cart-item-action">
+                        <button class="btn btn-outline" style="padding: 8px; display: inline-flex;" onclick="removeItem(${index})">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                `;
+                
+                cartItemsContainer.appendChild(itemElement);
+            });
+            
+            // Update summary values
+            const tax = subtotal * 0.18; // 18% GST
+            const deliveryFee = 100;
+            const total = subtotal + tax + deliveryFee;
+            
+            subtotalElement.textContent = `₹${subtotal.toFixed(2)}`;
+            taxElement.textContent = `₹${tax.toFixed(2)}`;
+            totalElement.textContent = `₹${total.toFixed(2)}`;
+        }
+        
+        // Function to remove item from cart
+        function removeItem(index) {
+            cart.splice(index, 1);
+            localStorage.setItem('cart', JSON.stringify(cart));
+            displayCart();
+            
+            // Show confirmation
+            const confirmationDiv = document.createElement('div');
+            confirmationDiv.style.position = 'fixed';
+            confirmationDiv.style.top = '20px';
+            confirmationDiv.style.left = '50%';
+            confirmationDiv.style.transform = 'translateX(-50%)';
+            confirmationDiv.style.backgroundColor = 'var(--warning)';
+            confirmationDiv.style.color = 'white';
+            confirmationDiv.style.padding = '16px';
+            confirmationDiv.style.borderRadius = '8px';
+            confirmationDiv.style.zIndex = '1000';
+            confirmationDiv.style.boxShadow = '0 4px 12px rgba(0,0,0,0.15)';
+            confirmationDiv.innerHTML = `<i class="fas fa-trash"></i> Item removed from cart`;
+            
+            document.body.appendChild(confirmationDiv);
+            
+            setTimeout(() => {
+                confirmationDiv.style.opacity = '0';
+                confirmationDiv.style.transition = 'opacity 0.5s ease';
+                setTimeout(() => {
+                    document.body.removeChild(confirmationDiv);
+                }, 500);
+            }, 3000);
+        }
+        
+        // Function to proceed to payment
+        function proceedToPayment() {
+            if (cart.length === 0) {
+                alert('Your cart is empty!');
+                return;
+            }
+            
+            // Store cart and totals for payment page
+            const subtotal = cart.reduce((total, item) => total + item.totalPrice, 0);
+            const tax = subtotal * 0.18;
+            const deliveryFee = 100;
+            const total = subtotal + tax + deliveryFee;
+            
+            const orderSummary = {
+                items: cart,
+                subtotal: subtotal,
+                tax: tax,
+                deliveryFee: deliveryFee,
+                total: total
+            };
+            
+            localStorage.setItem('orderSummary', JSON.stringify(orderSummary));
+            window.location.href = 'payment.html';
+        }
+        
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            displayCart();
+            
+            // Initialize animation for elements
+            const animateElements = document.querySelectorAll('.animate-fade-in');
+            
+            function checkScroll() {
+                animateElements.forEach(element => {
+                    const elementTop = element.getBoundingClientRect().top;
+                    const windowHeight = window.innerHeight;
+                    
+                    if (elementTop < windowHeight - 100) {
+                        element.style.opacity = 1;
+                        element.style.transform = 'translateY(0)';
+                    }
+                });
+            }
+            
+            // Initialize elements
+            animateElements.forEach(element => {
+                element.style.opacity = 0;
+                element.style.transform = 'translateY(20px)';
+                element.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+            });
+            
+            // Check on load and scroll
+            window.addEventListener('load', checkScroll);
+            window.addEventListener('scroll', checkScroll);
+        });
+    </script>
+</body>
+</html>

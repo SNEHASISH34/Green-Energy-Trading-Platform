@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign In - Green Energy Trading</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <h1><i class="fas fa-leaf"></i> Green Energy Trading</h1>
+            <button id="themeToggle" class="theme-toggle">
+                <i class="fas fa-sun"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main>
+        <div class="container auth-container animate-fade-in">
+            <div class="auth-card">
+                <div class="auth-header">
+                    <h2>Login to Your Account</h2>
+                    <p>Welcome back to Green Energy Trading</p>
+                </div>
+                
+                <form class="auth-form" id="loginForm">
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" class="form-control" placeholder="Enter your email" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" id="password" class="form-control" placeholder="Enter your password" required>
+                        <a href="#" onclick="showForgotPasswordModal()" class="forgot-password-link">Forgot Password?</a>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary" style="width: 100%; padding: 12px;">
+                        <span id="loginButtonText">Login</span>
+                        <i id="loginSpinner" class="fas fa-spinner fa-spin" style="display: none;"></i>
+                    </button>
+                </form>
+                
+                <div class="auth-links">
+                    <p>Don't have an account? <a href="sign-up.html">Sign Up</a></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Forgot Password Modal -->
+        <div id="forgotPasswordModal" class="modal">
+            <div class="modal-content">
+                <h2>Reset Password</h2>
+                <p>Enter your email address to receive a password reset link.</p>
+                <div class="form-group">
+                    <input type="email" id="resetEmail" class="form-control" placeholder="Enter your email">
+                </div>
+                <div class="modal-actions">
+                    <button class="btn btn-outline" onclick="closeForgotPasswordModal()">Cancel</button>
+                    <button class="btn btn-primary" onclick="sendResetLink()">
+                        <span id="resetButtonText">Send Reset Link</span>
+                        <i id="resetSpinner" class="fas fa-spinner fa-spin" style="display: none;"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-column">
+                <h3>Company</h3>
+                <ul class="footer-links">
+                    <li><a href="#">About Us</a></li>
+                    <li><a href="#">Our Team</a></li>
+                    <li><a href="#">Careers</a></li>
+                    <li><a href="#">Contact Us</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h3>Services</h3>
+                <ul class="footer-links">
+                    <li><a href="solar.html">Solar Electricity</a></li>
+                    <li><a href="wind.html">Wind Electricity</a></li>
+                    <li><a href="#">Become a Seller</a></li>
+                    <li><a href="#">Business Solutions</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h3>Help & Support</h3>
+                <ul class="footer-links">
+                    <li><a href="#">FAQ</a></li>
+                    <li><a href="#">Shipping Policy</a></li>
+                    <li><a href="#">Returns & Refunds</a></li>
+                    <li><a href="#">Payment Options</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h3>Connect With Us</h3>
+                <ul class="footer-links">
+                    <li><a href="#"><i class="fab fa-facebook"></i> Facebook</a></li>
+                    <li><a href="#"><i class="fab fa-twitter"></i> Twitter</a></li>
+                    <li><a href="#"><i class="fab fa-instagram"></i> Instagram</a></li>
+                    <li><a href="#"><i class="fab fa-linkedin"></i> LinkedIn</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="copyright">
+            <p>&copy; 2025 Green Energy Trading. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script type="module">
+        import { signIn, resetPassword } from './src/auth.js';
+
+        // Theme toggle functionality
+        function initializeTheme() {
+            const themeToggle = document.getElementById('themeToggle');
+            const html = document.documentElement;
+            const icon = themeToggle.querySelector('i');
+
+            // Load saved theme
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            html.setAttribute('data-theme', savedTheme);
+            updateThemeIcon(savedTheme);
+
+            themeToggle.addEventListener('click', () => {
+                const currentTheme = html.getAttribute('data-theme');
+                const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+                
+                html.setAttribute('data-theme', newTheme);
+                localStorage.setItem('theme', newTheme);
+                updateThemeIcon(newTheme);
+            });
+        }
+
+        function updateThemeIcon(theme) {
+            const icon = document.querySelector('.theme-toggle i');
+            icon.className = theme === 'light' ? 'fas fa-moon' : 'fas fa-sun';
+        }
+
+        // Forgot Password Modal Functions
+        window.showForgotPasswordModal = function() {
+            document.getElementById('forgotPasswordModal').style.display = 'flex';
+            document.getElementById('resetEmail').focus();
+        }
+
+        window.closeForgotPasswordModal = function() {
+            document.getElementById('forgotPasswordModal').style.display = 'none';
+            document.getElementById('resetEmail').value = '';
+        }
+
+        window.sendResetLink = async function() {
+            const email = document.getElementById('resetEmail').value.trim();
+            if (!email) {
+                alert('Please enter your email address.');
+                return;
+            }
+
+            // Show loading state
+            const buttonText = document.getElementById('resetButtonText');
+            const spinner = document.getElementById('resetSpinner');
+            buttonText.style.display = 'none';
+            spinner.style.display = 'inline-block';
+
+            try {
+                const { error } = await resetPassword(email);
+                
+                if (error) throw error;
+
+                alert('Password reset link has been sent to your email.');
+                closeForgotPasswordModal();
+            } catch (error) {
+                alert(error.message || 'Failed to send reset link.');
+            } finally {
+                buttonText.style.display = 'inline';
+                spinner.style.display = 'none';
+            }
+        }
+
+        // Handle login form submission
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value;
+
+            // Show loading state
+            const buttonText = document.getElementById('loginButtonText');
+            const spinner = document.getElementById('loginSpinner');
+            buttonText.style.display = 'none';
+            spinner.style.display = 'inline-block';
+
+            try {
+                const { user, profile, error } = await signIn(email, password);
+                
+                if (error) throw error;
+
+                // Store user profile in localStorage for easy access
+                localStorage.setItem('currentUser', JSON.stringify({
+                    id: user.id,
+                    name: profile.name,
+                    email: profile.email
+                }));
+
+                // Redirect to home page
+                window.location.href = 'index.html';
+            } catch (error) {
+                alert(error.message || 'Invalid email or password.');
+                buttonText.style.display = 'inline';
+                spinner.style.display = 'none';
+            }
+        });
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeTheme();
+
+            // Close modal when clicking outside
+            window.onclick = function(event) {
+                const modal = document.getElementById('forgotPasswordModal');
+                if (event.target === modal) {
+                    closeForgotPasswordModal();
+                }
+            };
+
+            // Handle Enter key in reset email input
+            document.getElementById('resetEmail').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    sendResetLink();
+                }
+            });
+        });
+    </script>
+</body>
+</html>
