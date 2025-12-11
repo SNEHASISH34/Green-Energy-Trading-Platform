@@ -1,24 +1,51 @@
-import './style.css'
-import javascriptLogo from './javascript.svg'
-import viteLogo from '/vite.svg'
-import { setupCounter } from './counter.js'
+import { signIn, signUp, signOut } from './auth.js';
+import { supabase } from './supabase.js';
 
-document.querySelector('#app').innerHTML = `
-  <div>
-    <a href="https://vitejs.dev" target="_blank">
-      <img src="${viteLogo}" class="logo" alt="Vite logo" />
-    </a>
-    <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript" target="_blank">
-      <img src="${javascriptLogo}" class="logo vanilla" alt="JavaScript logo" />
-    </a>
-    <h1>Hello Vite!</h1>
-    <div class="card">
-      <button id="counter" type="button"></button>
-    </div>
-    <p class="read-the-docs">
-      Click on the Vite logo to learn more
-    </p>
-  </div>
-`
+const signupForm = document.getElementById('signupForm');
+const loginForm = document.getElementById('loginForm');
+const logoutBtn = document.getElementById('logoutBtn');
 
-setupCounter(document.querySelector('#counter'))
+if (signupForm) {
+    signupForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const name = document.getElementById('name').value.trim();
+        const email = document.getElementById('email').value.trim();
+        const password = document.getElementById('password').value.trim();
+
+        const { data, error } = await signUp(email, password, name);
+
+        if (error) {
+            alert(error.message);
+            return;
+        }
+
+        alert("Account created. Check your email.");
+        window.location.href = "sign-in.html";
+    });
+}
+
+if (loginForm) {
+    loginForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const email = document.getElementById('email').value.trim();
+        const password = document.getElementById('password').value.trim();
+
+        const { data, error } = await signIn(email, password);
+
+        if (error) {
+            alert(error.message);
+            return;
+        }
+
+        localStorage.setItem('currentUser', JSON.stringify(data.user));
+        window.location.href = "index.html";
+    });
+}
+
+if (logoutBtn) {
+    logoutBtn.addEventListener('click', async () => {
+        await signOut();
+        localStorage.removeItem('currentUser');
+        window.location.href = "sign-in.html";
+    });
+}
