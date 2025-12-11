@@ -1,15 +1,28 @@
-import { supabase } from './supabase.js'; // adjust export name/path
+import { supabase } from './supabase.js';
 
-export async function signUp(email, password) {
-  const { data, error } = await supabase.auth.signUp({ email, password });
-  if (error) console.error('Supabase signUp error', error);
-  else console.log('Supabase signUp data', data);
+export async function signUp(email, password, name) {
+  const { data, error } = await supabase.auth.signUp({
+    email,
+    password,
+    options: { data: { name } }
+  });
   return { data, error };
 }
 
 export async function signIn(email, password) {
-  const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-  if (error) console.error('Supabase signIn error', error);
-  else console.log('Supabase signIn data', data);
+  const { data, error } = await supabase.auth.signInWithPassword({
+    email,
+    password
+  });
+  return { data, error };
+}
+
+export async function signOut() {
+  const { error } = await supabase.auth.signOut();
+  return { error };
+}
+
+export async function resetPassword(email) {
+  const { data, error } = await supabase.auth.resetPasswordForEmail(email);
   return { data, error };
 }
